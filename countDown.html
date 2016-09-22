@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        倒计时
+    </title>
+    <style>
+    #test{
+        width:200px;
+        height:100px;
+        background-color:red;
+        display:flex;
+        margin:auto;
+    }
+    #pp{
+        margin:auto;
+        font-size:20px;
+    }
+    </style>
+</head>
+<body>
+    <div id="test">
+        <p id="pp" onclick="jishi();">点击发送验证码</p>
+    </div>
+</body>
+    <script>
+        function jishi(){
+            var node = document.getElementById("pp");
+            var count = 60;
+            var timer = setInterval(function(){
+                node.innerHTML = count+"秒后重发";
+                node.onclick = null;
+                count--;
+                if(count == -1) {
+                    clearInterval(timer);
+                    node.innerHTML = "点击发送验证码";
+                    node.onclick = jishi;
+                }
+            }, 1000);
+        }
+    </script>
+</html>
