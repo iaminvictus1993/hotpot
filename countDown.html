@@ -20,11 +20,11 @@
 </head>
 <body>
     <div id="test">
-        <p id="pp" onclick="jishi();">点击发送验证码</p>
+        <p id="pp" onclick="countDown();">点击发送验证码</p>
     </div>
 </body>
     <script>
-        function jishi(){
+        function countDown(){
             var node = document.getElementById("pp");
             var count = 60;
             var timer = setInterval(function(){
@@ -34,7 +34,7 @@
                 if(count == -1) {
                     clearInterval(timer);
                     node.innerHTML = "点击发送验证码";
-                    node.onclick = jishi;
+                    node.onclick = countDown;
                 }
             }, 1000);
         }
