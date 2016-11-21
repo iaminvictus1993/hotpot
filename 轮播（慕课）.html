@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>焦点轮播图</title>
+    <style type="text/css">
+        *{margin: 0;padding: 0;text-decoration: none;}
+        body{
+            padding: 20px;
+        }
+        #container{
+            width: 600px;
+            height: 400px;
+            border: 3px solid #333;
+            overflow: hidden;
+            position: relative;
+        }
+        #list{
+            width: 4200px;
+            height: 400px;
+            position: absolute;
+            z-index: 1;
+        }
+        #list img{
+            float: left;
+            width: 600px;
+            height: 400px;
+        }
+        #buttons{
+            position: absolute;
+            height: 10px;
+            width: 100px;
+            z-index: 2;
+            bottom: 20px;
+            left: 250px;
+        }
+        #buttons span{
+            cursor:pointer;
+            float: left;
+            border: 1px solid #fff;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #333;
+            margin-right: 5px;
+        }
+        #buttons .on{
+           background: orangered;
+        }
+        .arrow{
+            cursor: pointer;
+            display: none;
+            line-height: 39px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            z-index: 2;
+            top: 180px;
+            background-color: RGBA(0,0,0,.3);
+            color: #fff;
+        }
+        .arrow:hover{
+            background-color: RGBA(0,0,0,.7);
+        }
+        #container:hover .arrow{
+           display: block;
+        }
+        #prev{
+            left: 20px;
+        }
+        #next{
+            right: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload=function(){
+            //获取节点
+            var container = document.getElementById('container');
+            var list = document.getElementById('list');
+            var buttons = document.getElementById('buttons').getElementsByTagName('span');
+            var prev = document.getElementById('prev');
+            var next = document.getElementById('next');
+            var index = 1; 
+            var animated = false;//优化动画性能
+            var timer;
+            //点亮小圆点，删除原有已点亮节点class，新增目标节点
+            function showButton() {
+                Array.prototype.forEach.call(buttons, function(item) {
+                    if(item.className == "on") {
+                        item.className = "";
+                        return;
+                    }
+                });
+                buttons[index - 1].className = "on";
+            }
+            //实现图片偏移，以达到轮播效果
+            function animate(offset) {
+                animated = true;
+                var newLeft = parseInt(list.style.left) + offset;
+                var time = 300;
+                var interval = 10;//位移时间间隔
+                var speed = offset/(time/interval);//每次位移量
+                
+                function go() {
+                    var con1 = speed < 0 && parseInt(list.style.left) > newLeft;
+                    var con2 = speed > 0 && parseInt(list.style.left) < newLeft;
+                    if(con1 || con2) {
+                        list.style.left = parseInt(list.style.left) + speed + 'px'; //逐渐增加偏移值，形成动画效果
+                        setTimeout(go, interval);  //递归移动，直到距离达到目标值
+                    } else {
+                        list.style.left = newLeft + 'px';
+                        //判断是否在辅助图上，归位
+                        if(newLeft > -600) {
+                            list.style.left = -3000 +'px';
+                        }
+                        if(newLeft < -3000) {
+                            list.style.left = -600 +'px';
+                        } 
+                        animated = false;
+                    }
+                }
+                go();
+            }     
+            //自动播放
+            function play(){
+                timer = setInterval(function(){
+                    next.onclick();
+                },3000);
+            }
+            //清楚自动播放
+            function stop() {
+                clearInterval(timer);
+            }
+            next.onclick = function() {
+                //若已在动画中，则不进行任何操作            
+                if (animated) {
+                    return;
+                }
+                if(index == 5) {
+                    index = 1;  //图片序号为右末尾时，序号重新开始，防止无限叠加
+                }else{
+                    index += 1;               
+                }
+                animate(-600);                  
+                showButton();  
+             
+            };
+            prev.onclick = function() {
+                //若已在动画中，则不进行任何操作
+                if (animated) {
+                    return;
+                }
+                if(index == 1) {
+                    index = 5; //图片序号为左末尾时，序号重新开始，防止无限叠加
+                }else{
+                    index -= 1;               
+                }
+                animate(600);               
+                showButton();
+            }; 
+            Array.prototype.forEach.call(buttons, function(item) {
+                item.onclick = function() {
+                    if(animated) {
+                        return;
+                    }
+                    //显示正确，不必执行下面代码，优化性能
+                    if(this.className == "on") {
+                        return;
+                    }
+                    //获取自定义属性只能用getAttribute
+                    var myIndex = parseInt(this.getAttribute('index'));
+                    animate(-600*(myIndex-index));//与上次图片的差值
+                    index = myIndex;//index更新数值
+                    showButton();
+                }
+            });
+            container.onmouseover = stop;
+            container.onmouseout = play; 
+            play();            
+        }            
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div id="list" style="left:-600px;">
+            <img src="5.jpg" alt="5"/>
+            <img src="1.jpg" alt="1"/>
+            <img src="2.jpg" alt="2"/>
+            <img src="3.jpg" alt="3"/>
+            <img src="4.jpg" alt="4"/>
+            <img src="5.jpg" alt="5"/>
+            <img src="1.jpg" alt="1"/>
+        </div>
+        <div id="buttons">
+            <span index="1" class="on"></span>
+            <span index="2"></span>
+            <span index="3"></span>
+            <span index="4"></span>
+            <span index="5"></span>
+        </div>
+        <a href="javascript:;" id="prev" class="arrow">&lt;</a>
+        <a href="javascript:;" id="next" class="arrow">&gt;</a>
+    </div>
+</body>
+</html>
