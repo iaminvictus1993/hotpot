@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Javascript简单实现前端路由</title>
+<style>
+</style>
+</head>
+<body>
+<div> 
+    <nav> 
+        <ul> 
+            <li><a href="#/">blue</a></li> 
+            <li><a href="#/yellow">yellow</a></li>
+            <li><a href="#/green">green</a></li>
+        </ul> 
+    </nav>
+</div>       
+<script type="text/javascript">
+    function Router() {
+        this.routes = {};
+        this.currentUrl = '';
+        this.previousUrl = '';
+    }
+    Router.prototype = {
+        constructor: Router,
+        //路由变化后，执行函数
+        refresh: function(url) {
+            this.previousUrl = this.currentUrl;
+            this.currentUrl = url;
+            this.routes[url]();
+        },
+        //设置对应路由
+        route: function(path, cb) {
+            this.routes[path] = cb || function(){}; 
+        },
+        //初始化，绑定事件，注意作用域指向
+        init: function() {
+            var _this = this;
+            window.onhashchange = function() {
+                _this.refresh(location.hash.slice(1));
+            };            
+            window.onload = function() {
+                _this.refresh(location.hash.slice(1));
+            };
+        },
+        //返回上一路由
+        back: function() {
+            this.routes[this.previousUrl]();
+        }
+    };
+    var router = new Router;
+    router.init();
+    router.route('/', function() {
+        document.body.style.backgroundColor = 'blue';
+    });    
+    router.route('/yellow', function() {
+        document.body.style.backgroundColor = 'yellow';
+    });    
+    router.route('/green', function() {
+        document.body.style.backgroundColor = 'green';
+    });
+</script>
+</body>
+</html>
