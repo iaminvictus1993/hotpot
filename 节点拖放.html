@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <ul id='ul1'>
+        <li draggable="true">1</li>
+        <li draggable="true">2</li>
+        <li draggable="true">3</li>
+        <li draggable="true">4</li>
+        <li draggable="true">5</li>
+    </ul>
+    <hr>
+    <ul id='ul2' draggable>
+        <li draggable="true">一</li>
+        <li draggable="true">二</li>
+        <li draggable="true">三</li>
+        <li draggable="true">四</li>
+        <li draggable="true">五</li>
+        <li draggable="true">六</li>
+    </ul>
+    <script>
+        var drageNode;
+        var ul1 = document.getElementById('ul1');
+        var ul2 = document.getElementById('ul2');
+        document.addEventListener('dragstart', function(e) {
+            drageNode = e.target;
+            console.log('dragstart');
+        });       
+        document.addEventListener('dragend', function(e) {
+            console.log('dragend');
+        });
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });         
+        document.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+        });    
+        ul2.addEventListener('drop', function(e) {
+            console.log('drop');
+            console.log(e.target);
+            e.target.parentNode.insertBefore(drageNode, e.target)
+        });   
+        ul1.addEventListener('drop', function(e) {
+            console.log('drop1');
+            console.log(e.target);
+            e.target.parentNode.insertBefore(drageNode, e.target)
+        });         
+    </script>
+</body>
+</html>
