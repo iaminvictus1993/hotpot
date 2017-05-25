@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>音乐播放器demo</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        @keyframes roatte{
+            0% {
+                transform:rotate(0deg);
+            }              
+            100% {
+                transform: rotate(360deg);
+
+            }
+        }
+        #container {
+            text-align: center;
+            height: 500px;
+            background-color: #333;
+        }
+        #logo {
+
+            margin: 0 auto;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: block;
+        }
+        .rotate {
+            animation-name: roatte;
+            animation-duration: 15s;
+            animation-timing-function: linear;
+            animation-delay: 0s;
+            animation-iteration-count: infinite;
+        }
+        .controlBtn {
+            color: white;
+        }
+        #progress {
+            color: white;
+        }
+        #progressBar {
+            display: inline-block;
+        }
+        #all {
+            width: 400px;
+            height: 20px;
+            background-color: white;
+        }
+        #part {
+            height: 20px;
+            width: 0;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id='container'>
+        <img id='logo' src="iamyou.jpg">
+        <div id="btn">
+            <span id="back" class="controlBtn">后退</span>
+            <span id="play" class="controlBtn">播放</span>
+            <span id="forward" class="controlBtn">前进</span>
+        </div>
+        <div id="progress">
+            <span id="cur">0</span>/
+            <span id="total">0</span>
+        </div>
+        <div id="progressBar">
+            <div id="all">
+                <div id="part"></div>
+            </div>
+        </div>
+        <audio id='audio' src="iamyou.mp3"></audio>
+    </div>
+    <script>  
+        //获取节点  
+        function getNode(id) {
+            return document.getElementById(id);
+        };
+
+        //还原图片初始未知
+        function back () {
+            getNode('logo').className = null;
+            //动画运行状态，即使删除clas后，该属性依旧为原始值
+            getNode('logo').style.animationPlayState = 'running'
+        }
+
+        //获取已播放时间
+        function progress() {
+            //显示为分秒格式
+            getNode('cur').innerHTML = Math.floor(audio.currentTime/60)+':'+(audio.currentTime%60/100).toFixed(2).slice(-2);
+            getNode('part').style.width = ((audio.currentTime/audio.duration)*100).toFixed(2) + '%';
+        }
+
+        //获取歌曲总时间
+        function time() {
+            getNode('total').innerHTML = Math.floor(audio.duration/60)+':'+(audio.duration%60/100).toFixed(2).slice(-2);
+        }
+        //绑定事件
+        function bindEvent() {
+            var audio = getNode('audio');
+            audio.addEventListener("loadedmetadata",time);
+            audio.addEventListener("timeupdate",progress);
+            audio.addEventListener("ended",function(){audio.play();});
+            audio.addEventListener("play",function(){
+                if(getNode('logo').className == 'rotate') {
+                    getNode('logo').style.animationPlayState = 'running'
+                } else {
+                    getNode('logo').className = 'rotate';
+                }
+            });        
+            audio.addEventListener("pause",function(){
+                getNode('logo').style.animationPlayState = 'paused'
+            });
+            //事件委托，监听控制功能
+            getNode('btn').onclick = function(e) {
+                var id = e.target.id;
+                if(id == 'btn') {
+                    return;
+                }
+                if(id == 'play') {
+                    if(audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
+                } else if (id == 'back') {
+                    //切歌，并自动播放
+                    audio.src = 'ryqsf.mp3';
+                    //还原logo位置
+                    back();
+                    audio.play();
+                } else {
+                    audio.src = 'counting.mp3';
+                    back();
+                    audio.play();
+                }
+            };
+            getNode('all').onclick = function(e) {
+                var clientWidth = e.target.id == 'all' ? e.target.clientWidth : e.target.parentNode.clientWidth;
+                var offsetX = e.offsetX;
+                var rate = ((offsetX/clientWidth)*100).toFixed(2) + '%';
+                getNode('part').style.width = rate;
+                audio.currentTime = (offsetX/clientWidth)*audio.duration;
+            }
+        }
+        bindEvent();
+    </script>
+</body>
+</html>
