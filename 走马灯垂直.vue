@@ -4,8 +4,6 @@
             <div class="content" :style="{ top }" ref="content">
                 <div v-for="(item,index) in (wonNotices.length?wonNotices:tempDocs)" class="news1" :key="index">
                     {{index + item}}
-
-
                 </div>
             </div>
         </div>
