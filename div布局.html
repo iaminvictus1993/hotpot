@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Example1 jquery.graphviz.js</title>
+  <script src="https://cdn.bootcss.com/less.js/3.0.0-pre.4/less.min.js"></script>
+  <style>
+    .container {
+      display: flex;
+    }
+
+    .container .left {
+      width: 100px;
+      background: pink;
+    }
+
+    .container .right {
+      width: 100px;
+      background: blue;
+    }
+
+    .container .center {
+      flex-grow: 1;
+      background: red;
+    }
+
+    .floatContainer {
+      margin-top: 50px;
+    }
+
+    .floatContainer .left {
+      width: 100px;
+      background: pink;
+      float: left;
+    }
+
+    .floatContainer .right {
+      float: right;
+      background: blue;
+      width: 100px;
+    }
+
+    .floatContainer .center {
+      background: red;
+      margin 0 100px;
+    }
+
+    .table {
+      margin-top: 50px;
+      display: table;
+      width: 100%;
+    }
+
+    .table .inner {
+      display: table-cell;
+    }
+
+    .table .left {
+      width: 100px;
+      background: pink;
+      float: left;
+    }
+
+    .table .right {
+      float: right;
+      background: blue;
+      width: 100px;
+    }
+
+    .table .center {
+      background: red;
+    }
+
+    .position {
+      position: relative;
+      margin-top: 50px;
+      width: 100%;
+    }
+
+    .position .left {
+      position: absolute;
+      width: 100px;
+      background: pink;
+      left: 0;
+      top: 0;
+    }
+
+    .position .right {
+      position: absolute;
+      width: 100px;
+      background: blue;
+      right: 0;
+      top: 0;
+    }
+
+    .position .center {
+      background: red;
+      margin: 0 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left">left</div>
+    <div class="center">center</div>
+    <div class="right">right</div>
+  </div>
+
+  <div class="floatContainer">
+    <div class="left">1</div>
+    <div class="right">3</div>
+    <div class="center">2</div>
+  </div>
+
+  <div class="table">
+    <div class="inner left">left</div>
+    <div class="inner center">
+      center！
+    </div>
+    <div class="inner right">right</div>
+  </div>
+
+  <div class="position">
+    <div class="left"> left</div>
+    <div class="center">
+      center！
+    </div>
+    <div class="right">right</div>
+  </div>
+</body>
+
+</html>
