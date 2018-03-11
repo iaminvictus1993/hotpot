@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>柯里化应用</title>
+</head>
+
+<body>
+    <script>
+        function log(params) {
+            return console.log(params)
+        }
+
+        // 加法
+        function add(...arr) {
+            return arr.reduce((a, b) => a + b)
+        }
+
+        // 参数复用
+        function curry1(fn, ...rest) {
+            // 获取除掉函数的参数
+            var args = rest
+            return function (...param) {
+                var inner = args.concat(param)
+                return fn.apply(null, inner)
+            }
+        }
+
+        // 延迟计算 && 参数复用
+        function curry2(fn, ...rest) {
+            var final = rest || []
+            return function a(...param) {
+                if (!param.length) {
+                    console.log('22222333')
+                    return fn.apply(null, final)
+                }
+                final.push(...param)
+                return a
+            }
+        }
+
+        (() => {
+            // 测试参数复用
+            var add5 = curry1(add, 5)
+            log(add5(5))
+            log(add5(5, 5))
+            log(add5(5, 5, 5))
+            // 测试延迟计算
+            var addDealy = curry2(add)
+            log(addDealy(5))
+            log(addDealy(5)(5))
+            log(addDealy(5)(5)(5)())
+        })()
+    </script>
+</body>
+
+</html>
